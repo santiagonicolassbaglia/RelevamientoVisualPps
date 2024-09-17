@@ -1,0 +1,7 @@
+{
+  "name": "RelevamientoVisualPps",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
