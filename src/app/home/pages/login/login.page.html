@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Iniciar Sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input type="email" formControlName="email"></ion-input>
+    </ion-item>
+    <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+      <small class="error">Email es requerido y debe tener un formato válido.</small>
+    </div>
+
+    <ion-item>
+      <ion-label position="floating">Contraseña</ion-label>
+      <ion-input type="password" formControlName="password"></ion-input>
+    </ion-item>
+    <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+      <small class="error">La contraseña es requerida (mínimo 6 caracteres).</small>
+    </div>
+
+    <ion-button expand="full" type="submit" [disabled]="loginForm.invalid">Iniciar sesión</ion-button>
+  </form>
+
+  <!-- Botones de ingreso rápido -->
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngFor="let user of quickUsers">
+        <ion-button expand="full" (click)="fillForm(user)">
+          {{ user.correo }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Botón de registrarse -->
+  <ion-button expand="full" (click)="goToRegister()">Registrarse</ion-button> <!-- Botón para ir al registro -->
+
+</ion-content>

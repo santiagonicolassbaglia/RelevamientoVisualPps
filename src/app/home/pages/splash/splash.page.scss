@@ -1,0 +1,32 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css");
+
+.animate__animated {
+  animation-duration: 2s;
+  animation-fill-mode: both;
+}
+
+.d-flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .d-flex-column {
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    justify-content: space-around;
+  }
+  
+  .glass {
+    /* From https://css.glass */
+    background: rgba(0, 0, 0, 1);
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .glass h1 {
+    font-weight: bold;
+    font-family: 'Arial Black', sans-serif;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
