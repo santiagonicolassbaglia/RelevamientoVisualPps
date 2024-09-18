@@ -19,6 +19,14 @@ export const routes: Routes = [
     path: 'splash',
     loadComponent: () => import('./home/pages/splash/splash.page').then( m => m.SplashPage)
   },
+  {
+    path: 'cosas-lindas',
+    loadComponent: () => import('./home/pages/cosas-lindas/cosas-lindas.page').then( m => m.CosasLindasPage)
+  },
+  {
+    path: 'cosas-feas',
+    loadComponent: () => import('./home/pages/cosas-feas/cosas-feas.page').then( m => m.CosasFeasPage)
+  },
   
 
 

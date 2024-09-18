@@ -21,4 +21,14 @@ logout() {
     console.error('Error al cerrar sesión', error);
   });
 }
+
+goToCosasLindas() {
+  this.router.navigate(['/cosas-lindas']);  // Redirigir a la página de cosas lindas
+}
+
+goToCosasFeas() {
+  this.router.navigate(['/cosas-feas']);  // Redirigir a la página de cosas feas
+}
+
+
 }

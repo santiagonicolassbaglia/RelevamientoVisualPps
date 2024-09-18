@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Cosas Lindas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-button expand="block" (click)="tomarFoto()">
+    <ion-icon name="camera-outline"></ion-icon>
+    Tomar Foto
+  </ion-button>
+
+  <!-- Mostrar las fotos subidas -->
+  <ion-list>
+    <ion-item *ngFor="let foto of fotos$ | async">
+      <ion-thumbnail slot="start">
+        <img [src]="foto.url">
+      </ion-thumbnail>
+      <ion-label>
+        <h2>{{ foto.usuario }}</h2>
+        <p>{{ foto.fecha.toDate() | date }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
