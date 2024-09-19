@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonIcon, IonList, IonItem, IonLabel } from '@ionic/angular/standalone';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, query, orderBy } from '@angular/fire/firestore';
+
 import { Storage, ref, uploadString, getDownloadURL } from '@angular/fire/storage';
 import { AuthService } from 'src/app/Service/auth.service';
 import { Observable } from 'rxjs';
-import { addDoc } from 'firebase/firestore';
+import { addDoc, doc, updateDoc } from 'firebase/firestore';
 
 @Component({
   selector: 'app-cosas-lindas',
@@ -18,25 +19,31 @@ import { addDoc } from 'firebase/firestore';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CosasLindasPage implements OnInit {
-  fotos: Array<{ imageSrc: string, usuario: string, fecha: Date }> = [];  // Array para almacenar las fotos
-  imageBase64: string | null = null;  // Base64 de la imagen seleccionada o tomada
-  imageSrc: string | null = null;  // Imagen seleccionada o tomada para mostrarla en la vista
+  fotos: Array<{ id: string, imageSrc: string, usuario: string, fecha: Date, votos: number, votantes: string[] }> = [];
+  imageBase64: string | null = null;
+  imageSrc: string | null = null;
+  currentUser: any
 
   constructor(private firestore: Firestore, private storage: Storage, private authService: AuthService) {}
 
-  // Cargar las fotos desde Firestore al iniciar la pantalla
+  // Cargar las fotos y obtener el usuario actual
   ngOnInit() {
+    this.currentUser = this.authService.getCurrentUser();  // Obtener el usuario actual
     this.cargarFotos();
   }
 
   // Método para cargar fotos desde Firestore
   cargarFotos() {
     const fotosCollection = collection(this.firestore, 'fotos-lindas');
-    collectionData(fotosCollection, { idField: 'id' }).subscribe((fotos: any[]) => {
+    const fotosQuery = query(fotosCollection, orderBy('fecha', 'desc'));  // Ordenar por fecha en orden descendente
+    collectionData(fotosQuery, { idField: 'id' }).subscribe((fotos: any[]) => {
       this.fotos = fotos.map(foto => ({
-        imageSrc: foto.url,  // La URL de la imagen subida a Firebase Storage
-        usuario: foto.usuario,  // El usuario que subió la foto
-        fecha: foto.fecha.toDate()  // Convertir el timestamp de Firestore a un objeto Date
+        id: foto.id,
+        imageSrc: foto.url,
+        usuario: foto.usuario,
+        fecha: foto.fecha.toDate(),
+        votos: foto.votos || 0,  // Inicializamos los votos si no existen
+        votantes: foto.votantes || []  // Lista de UIDs de los usuarios que han votado
       }));
     });
   }
@@ -46,17 +53,13 @@ export class CosasLindasPage implements OnInit {
     const image = await Camera.getPhoto({
       resultType: CameraResultType.Base64,
       source: CameraSource.Prompt,
-      promptLabelHeader: 'Selecciona una opción',  // Texto del encabezado
-      promptLabelPhoto: 'Seleccionar imagen de la galería',  // Texto para seleccionar imagen
-      promptLabelPicture: 'Tomar foto',  // Texto para tomar foto
-      promptLabelCancel: 'Cancelar',  // Texto del botón de cancelar
+      promptLabelHeader: 'Selecciona una opción',
+      promptLabelPhoto: 'Seleccionar imagen de la galería',
+      promptLabelPicture: 'Tomar foto',
+      promptLabelCancel: 'Cancelar',
     });
 
-
-    // Guardar la imagen seleccionada en base64
     this.imageBase64 = image.base64String || null;
-
-    // Mostrar la imagen en la interfaz
     this.imageSrc = `data:image/jpeg;base64,${this.imageBase64}`;
   }
 
@@ -67,26 +70,67 @@ export class CosasLindasPage implements OnInit {
       return;
     }
 
-    const currentUser = this.authService.getCurrentUser();  // Obtener usuario actual
-    const filePath = `fotos-lindas/${Date.now()}_${currentUser?.uid}.jpg`;  // Definir la ruta en Storage
-    const storageRef = ref(this.storage, filePath);  // Crear referencia al archivo en Firebase Storage
+    const currentUser = this.authService.getCurrentUser();
+    const filePath = `fotos-lindas/${Date.now()}_${currentUser?.uid}.jpg`;
+    const storageRef = ref(this.storage, filePath);
 
-    // Subir la imagen a Firebase Storage
     await uploadString(storageRef, this.imageBase64, 'base64');
-
-    // Obtener la URL de la imagen subida
     const downloadURL = await getDownloadURL(storageRef);
 
-    // Guardar la URL de la imagen en Firestore junto con el usuario y la fecha
     const fotosCollection = collection(this.firestore, 'fotos-lindas');
     await addDoc(fotosCollection, {
       url: downloadURL,
       fecha: new Date(),
-      usuario: currentUser?.email || 'Desconocido',  // Guardar el nombre del usuario relacionado con la foto
+      usuario: currentUser?.email || 'Desconocido',
+      votos: 0,
+      votantes: []  // Inicializamos la lista de votantes vacía
     });
 
-    // Limpiar la imagen seleccionada después de subirla
     this.imageSrc = null;
     this.imageBase64 = null;
+  }
+
+  // Método para votar o quitar el voto
+  async votar(foto: any) {
+    const currentUserUid = this.currentUser?.uid;  // Obtener el UID del usuario actual
+
+    if (!currentUserUid) {
+      console.error('Usuario no autenticado');
+      return;
+    }
+
+    const fotoDocRef = doc(this.firestore, `fotos-lindas/${foto.id}`);
+
+    // Verificamos si el usuario ya ha votado por esta foto
+    const yaVotado = foto.votantes.includes(currentUserUid);
+
+    if (yaVotado) {
+      // Si ya ha votado, retirar el voto
+      const nuevoNumeroDeVotos = foto.votos - 1;
+      const nuevosVotantes = foto.votantes.filter(votante => votante !== currentUserUid);  // Remover el UID del usuario de la lista de votantes
+
+      await updateDoc(fotoDocRef, {
+        votos: nuevoNumeroDeVotos,
+        votantes: nuevosVotantes
+      });
+
+      // Actualizamos localmente la lista de fotos
+      foto.votos = nuevoNumeroDeVotos;
+      foto.votantes = nuevosVotantes;
+
+    } else {
+      // Si no ha votado, agregar el voto
+      const nuevoNumeroDeVotos = foto.votos + 1;
+      const nuevosVotantes = [...foto.votantes, currentUserUid];  // Agregar el UID del usuario a la lista de votantes
+
+      await updateDoc(fotoDocRef, {
+        votos: nuevoNumeroDeVotos,
+        votantes: nuevosVotantes
+      });
+
+      // Actualizamos localmente la lista de fotos
+      foto.votos = nuevoNumeroDeVotos;
+      foto.votantes = nuevosVotantes;
+    }
   }
 }

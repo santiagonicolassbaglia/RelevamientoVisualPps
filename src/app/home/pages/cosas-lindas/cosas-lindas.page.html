@@ -30,7 +30,14 @@
       <ion-label>
         <h2>{{ foto.usuario }}</h2>  <!-- Mostrar el nombre del usuario que subió la foto -->
         <p>{{ foto.fecha | date }}</p>  <!-- Mostrar la fecha de subida -->
+        <p>Votos: {{ foto.votos }}</p>  <!-- Mostrar el número de votos -->
+  
+        <!-- Botón para votar o retirar voto -->
+        <ion-button (click)="votar(foto)">
+          {{ foto.votantes.includes(currentUser?.uid) ? 'Votado' : 'Votar' }}
+        </ion-button>
       </ion-label>
     </ion-item>
   </ion-list>
+  
 </ion-content>
