@@ -21,6 +21,17 @@
     </ion-button>
   </div>
 
+
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Cosas Lindas</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="abrirGrafico()">Ver Gráfico</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+
   <!-- Galería de fotos subidas por los usuarios -->
   <ion-list>
     <ion-item *ngFor="let foto of fotos">

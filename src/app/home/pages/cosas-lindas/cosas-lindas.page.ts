@@ -1,32 +1,34 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonIcon, IonList, IonItem, IonLabel } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';  // Solo necesitamos importar IonicModule
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Firestore, collection, collectionData, query, orderBy } from '@angular/fire/firestore';
-
 import { Storage, ref, uploadString, getDownloadURL } from '@angular/fire/storage';
 import { AuthService } from 'src/app/Service/auth.service';
 import { Observable } from 'rxjs';
 import { addDoc, doc, updateDoc } from 'firebase/firestore';
+import { ModalController } from '@ionic/angular';
+import { PieChartComponent } from '../../../componentes/pie-chart/pie-chart.component';  // Asegúrate de tener este componente
 
 @Component({
   selector: 'app-cosas-lindas',
   templateUrl: './cosas-lindas.page.html',
   styleUrls: ['./cosas-lindas.page.scss'],
   standalone: true,
-  imports: [IonLabel, IonItem, IonList, IonIcon, IonButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, IonicModule],  // Usar solo IonicModule para los componentes de Ionic
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CosasLindasPage implements OnInit {
   fotos: Array<{ id: string, imageSrc: string, usuario: string, fecha: Date, votos: number, votantes: string[] }> = [];
   imageBase64: string | null = null;
   imageSrc: string | null = null;
-  currentUser: any
+  currentUser: any;
+  pieChartLabels: string[] = [];
+  pieChartData: number[] = [];
 
-  constructor(private firestore: Firestore, private storage: Storage, private authService: AuthService) {}
+  constructor(private firestore: Firestore, private storage: Storage, private authService: AuthService, private modalController: ModalController) {}  // Incluir ModalController en el constructor
 
-  // Cargar las fotos y obtener el usuario actual
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();  // Obtener el usuario actual
     this.cargarFotos();
@@ -45,6 +47,8 @@ export class CosasLindasPage implements OnInit {
         votos: foto.votos || 0,  // Inicializamos los votos si no existen
         votantes: foto.votantes || []  // Lista de UIDs de los usuarios que han votado
       }));
+
+      this.prepararDatosGrafico();  // Prepara los datos para el gráfico de torta
     });
   }
 
@@ -107,7 +111,7 @@ export class CosasLindasPage implements OnInit {
     if (yaVotado) {
       // Si ya ha votado, retirar el voto
       const nuevoNumeroDeVotos = foto.votos - 1;
-      const nuevosVotantes = foto.votantes.filter(votante => votante !== currentUserUid);  // Remover el UID del usuario de la lista de votantes
+      const nuevosVotantes = foto.votantes.filter(votante => votante !== currentUserUid);
 
       await updateDoc(fotoDocRef, {
         votos: nuevoNumeroDeVotos,
@@ -121,7 +125,7 @@ export class CosasLindasPage implements OnInit {
     } else {
       // Si no ha votado, agregar el voto
       const nuevoNumeroDeVotos = foto.votos + 1;
-      const nuevosVotantes = [...foto.votantes, currentUserUid];  // Agregar el UID del usuario a la lista de votantes
+      const nuevosVotantes = [...foto.votantes, currentUserUid];
 
       await updateDoc(fotoDocRef, {
         votos: nuevoNumeroDeVotos,
@@ -132,5 +136,22 @@ export class CosasLindasPage implements OnInit {
       foto.votos = nuevoNumeroDeVotos;
       foto.votantes = nuevosVotantes;
     }
+  }
+
+  prepararDatosGrafico() {
+    this.pieChartLabels = this.fotos.map(foto => `Foto de ${foto.usuario}`);
+    this.pieChartData = this.fotos.map(foto => foto.votos);
+  }
+
+  // Método para abrir el modal con el gráfico de torta
+  async abrirGrafico() {
+    const modal = await this.modalController.create({
+      component: PieChartComponent,  // Componente del gráfico de torta
+      componentProps: {
+        labels: this.pieChartLabels,
+        data: this.pieChartData
+      }
+    });
+    return await modal.present();
   }
 }

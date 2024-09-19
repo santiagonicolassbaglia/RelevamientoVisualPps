@@ -1,13 +1,52 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>cosas-feas</ion-title>
+    <ion-title>Cosas Feas</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+<ion-content>
+  <!-- Botón para tomar o seleccionar una foto -->
+  <ion-button expand="block" (click)="tomarFoto()">
+    <ion-icon name="camera-outline"></ion-icon>
+    Tomar Foto
+  </ion-button>
+
+  <!-- Mostrar la imagen seleccionada o tomada -->
+  <div *ngIf="imageSrc">
+    <ion-img [src]="imageSrc"></ion-img>
+
+    <!-- Botón para subir la foto a Firebase -->
+    <ion-button expand="block" color="primary" (click)="subirFoto()">
+      Subir Foto
+    </ion-button>
+  </div>
+
+  <!-- Botón para abrir el gráfico -->
+  <ion-header>
     <ion-toolbar>
-      <ion-title size="large">cosas-feas</ion-title>
+      <ion-title>Cosas Feas</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="abrirGrafico()">Ver Gráfico</ion-button>
+      </ion-buttons>
     </ion-toolbar>
   </ion-header>
+
+  <!-- Galería de fotos subidas por los usuarios -->
+  <ion-list>
+    <ion-item *ngFor="let foto of fotos">
+      <ion-thumbnail slot="start">
+        <img [src]="foto.imageSrc">
+      </ion-thumbnail>
+      <ion-label>
+        <h2>{{ foto.usuario }}</h2>
+        <p>{{ foto.fecha | date }}</p>
+        <p>Votos: {{ foto.votos }}</p>
+
+        <!-- Botón para votar o retirar voto -->
+        <ion-button (click)="votar(foto)">
+          {{ foto.votantes.includes(currentUser?.uid) ? 'Votado' : 'Votar' }}
+        </ion-button>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

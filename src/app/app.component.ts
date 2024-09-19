@@ -8,7 +8,7 @@ import { IonApp, IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonContent, I
   selector: 'app-root',
   templateUrl: 'app.component.html',
   standalone: true,
-  imports: [IonButton, IonContent, IonTitle, IonToolbar, IonHeader, IonApp, IonRouterOutlet,RouterOutlet,FormsModule,CommonModule,ReactiveFormsModule],
+  imports: [IonButton, IonContent, IonTitle, IonToolbar, IonHeader, IonApp, IonRouterOutlet,RouterOutlet,FormsModule,CommonModule,ReactiveFormsModule  ],
 })
 export class AppComponent {
   constructor() {}
