@@ -5,20 +5,31 @@
 </ion-header>
 
 <ion-content>
+  <!-- Botón para tomar o seleccionar una foto -->
   <ion-button expand="block" (click)="tomarFoto()">
     <ion-icon name="camera-outline"></ion-icon>
     Tomar Foto
   </ion-button>
 
-  <!-- Mostrar las fotos subidas -->
+  <!-- Mostrar la imagen seleccionada o tomada -->
+  <div *ngIf="imageSrc">
+    <ion-img [src]="imageSrc"></ion-img>
+
+    <!-- Botón para subir la foto a Firebase -->
+    <ion-button expand="block" color="primary" (click)="subirFoto()">
+      Subir Foto
+    </ion-button>
+  </div>
+
+  <!-- Galería de fotos subidas por los usuarios -->
   <ion-list>
-    <ion-item *ngFor="let foto of fotos$ | async">
+    <ion-item *ngFor="let foto of fotos">
       <ion-thumbnail slot="start">
-        <img [src]="foto.url">
+        <img [src]="foto.imageSrc">
       </ion-thumbnail>
       <ion-label>
-        <h2>{{ foto.usuario }}</h2>
-        <p>{{ foto.fecha.toDate() | date }}</p>
+        <h2>{{ foto.usuario }}</h2>  <!-- Mostrar el nombre del usuario que subió la foto -->
+        <p>{{ foto.fecha | date }}</p>  <!-- Mostrar la fecha de subida -->
       </ion-label>
     </ion-item>
   </ion-list>

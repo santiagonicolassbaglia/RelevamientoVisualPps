@@ -40,7 +40,7 @@ export class AuthService {
     return signOut(this.auth);
   }
 
-  getCurrentUser() {
+  getCurrentUser(): User | null {
     return this.auth.currentUser;
   }
   
