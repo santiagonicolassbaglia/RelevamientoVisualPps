@@ -4,7 +4,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="background-content ion-padding">
   <!-- Formulario de inicio de sesión -->
   <form [formGroup]="loginForm" (ngSubmit)="login()">
     <ion-item>
@@ -23,12 +23,12 @@
       <small class="error">La contraseña es requerida (mínimo 6 caracteres).</small>
     </div>
 
-    <!-- Botón de iniciar sesión -->
     <ion-button expand="full" type="submit" [disabled]="loginForm.invalid" class="submit-button">
       Iniciar sesión
     </ion-button>
   </form>
 
+ 
 
   <!-- Botones de ingreso rápido -->
   <ion-grid>
