@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { addDoc, doc, updateDoc } from 'firebase/firestore';
 import { ModalController } from '@ionic/angular';
 import { BarChartComponent } from '../../../componentes/bar-chart/bar-chart.component';  // Componente para gráfico de barras
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-cosas-feas',
@@ -27,7 +28,7 @@ export class CosasFeasPage implements OnInit {
   barChartLabels: string[] = [];
   barChartData: number[] = [];
 
-  constructor(private firestore: Firestore, private storage: Storage, private authService: AuthService, private modalController: ModalController) {}
+  constructor(private firestore: Firestore, private storage: Storage, private authService: AuthService, private modalController: ModalController,private navCtrl: NavController) {}
 
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();
@@ -134,14 +135,15 @@ export class CosasFeasPage implements OnInit {
     this.barChartData = this.fotos.map(foto => foto.votos);
   }
 
-  async abrirGrafico() {
-    const modal = await this.modalController.create({
-      component: BarChartComponent,
-      componentProps: {
-        labels: this.barChartLabels,
-        data: this.barChartData
+  abrirGrafico() {
+    this.prepararDatosGrafico();
+
+    // Navegar a la página del gráfico pasando los datos
+    this.navCtrl.navigateForward('/grafico-bar', {
+      queryParams: {
+        labels: JSON.stringify(this.barChartLabels),
+        data: JSON.stringify(this.barChartData)
       }
     });
-    return await modal.present();
   }
 }

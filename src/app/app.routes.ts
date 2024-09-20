@@ -27,6 +27,14 @@ export const routes: Routes = [
     path: 'cosas-feas',
     loadComponent: () => import('./home/pages/cosas-feas/cosas-feas.page').then( m => m.CosasFeasPage)
   },
+  {
+    path: 'grafico-bar',
+    loadComponent: () => import('./home/pages/grafico-bar/grafico-bar.page').then( m => m.GraficoBarPage)
+  },
+  {
+    path: 'grafico-torta',
+    loadComponent: () => import('./grafico-torta/grafico-torta.page').then( m => m.GraficoTortaPage)
+  },
   
 
 

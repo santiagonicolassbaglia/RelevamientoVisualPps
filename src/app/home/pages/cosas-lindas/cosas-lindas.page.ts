@@ -10,6 +10,8 @@ import { Observable } from 'rxjs';
 import { addDoc, doc, updateDoc } from 'firebase/firestore';
 import { ModalController } from '@ionic/angular';
 import { PieChartComponent } from '../../../componentes/pie-chart/pie-chart.component';  // Asegúrate de tener este componente
+import { NavController } from '@ionic/angular'; 
+
 
 @Component({
   selector: 'app-cosas-lindas',
@@ -27,7 +29,7 @@ export class CosasLindasPage implements OnInit {
   pieChartLabels: string[] = [];
   pieChartData: number[] = [];
 
-  constructor(private firestore: Firestore, private storage: Storage, private authService: AuthService, private modalController: ModalController) {}  // Incluir ModalController en el constructor
+  constructor(private firestore: Firestore, private storage: Storage, private authService: AuthService, private modalController: ModalController, private navCtrl: NavController) {}  // Incluir ModalController en el constructor
 
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();  // Obtener el usuario actual
@@ -143,15 +145,15 @@ export class CosasLindasPage implements OnInit {
     this.pieChartData = this.fotos.map(foto => foto.votos);
   }
 
-  // Método para abrir el modal con el gráfico de torta
-  async abrirGrafico() {
-    const modal = await this.modalController.create({
-      component: PieChartComponent,  // Componente del gráfico de torta
-      componentProps: {
-        labels: this.pieChartLabels,
-        data: this.pieChartData
+  abrirGrafico() {
+    this.prepararDatosGrafico();
+
+    // Navegar a la página del gráfico pasando los datos
+    this.navCtrl.navigateForward('/grafico-torta', {
+      queryParams: {
+        labels: JSON.stringify(this.pieChartLabels),
+        data: JSON.stringify(this.pieChartData)
       }
     });
-    return await modal.present();
   }
 }

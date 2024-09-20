@@ -1,54 +1,55 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Cosas Lindas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="abrirGrafico()">Ver Gráfico</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <!-- Botón para tomar o seleccionar una foto -->
-  <ion-button expand="block" (click)="tomarFoto()">
-    <ion-icon name="camera-outline"></ion-icon>
-    Tomar Foto
-  </ion-button>
-
-  <!-- Mostrar la imagen seleccionada o tomada -->
-  <div *ngIf="imageSrc">
-    <ion-img [src]="imageSrc"></ion-img>
-
-    <!-- Botón para subir la foto a Firebase -->
-    <ion-button expand="block" color="primary" (click)="subirFoto()">
-      Subir Foto
+<ion-content class="ion-padding">
+  <div class="gallery-container">
+    <!-- Botón para tomar o seleccionar una foto -->
+    <ion-button expand="block" (click)="tomarFoto()">
+      <ion-icon name="camera-outline"></ion-icon>
+      Tomar Foto
     </ion-button>
+
+    <!-- Mostrar la imagen seleccionada o tomada -->
+    <div *ngIf="imageSrc">
+      <ion-img [src]="imageSrc"></ion-img>
+
+      <!-- Botón para subir la foto a Firebase -->
+      <ion-button expand="block" color="primary" (click)="subirFoto()">
+        Subir Foto
+      </ion-button>
+    </div>
+
+    <div *ngIf="fotos.length > 0; else emptyState">
+      <ion-list>
+        <ion-item *ngFor="let foto of fotos">
+          <ion-thumbnail slot="start">
+            <img [src]="foto.imageSrc">
+          </ion-thumbnail>
+          <ion-label>
+            <h2>{{ foto.usuario }}</h2>
+            <p>{{ foto.fecha | date }}</p>
+            <p>Votos: {{ foto.votos }}</p>
+
+            <!-- Botón para votar o retirar voto -->
+            <ion-button (click)="votar(foto)">
+              {{ foto.votantes.includes(currentUser?.uid) ? 'Votado' : 'Votar' }}
+            </ion-button>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <h3>No hay fotos subidas aún.</h3>
+        <p>Toma una foto y súbela para comenzar.</p>
+      </div>
+    </ng-template>
   </div>
-
-
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Cosas Lindas</ion-title>
-      <ion-buttons slot="end">
-        <ion-button (click)="abrirGrafico()">Ver Gráfico</ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-  
-
-  <!-- Galería de fotos subidas por los usuarios -->
-  <ion-list>
-    <ion-item *ngFor="let foto of fotos">
-      <ion-thumbnail slot="start">
-        <img [src]="foto.imageSrc">
-      </ion-thumbnail>
-      <ion-label>
-        <h2>{{ foto.usuario }}</h2>  <!-- Mostrar el nombre del usuario que subió la foto -->
-        <p>{{ foto.fecha | date }}</p>  <!-- Mostrar la fecha de subida -->
-        <p>Votos: {{ foto.votos }}</p>  <!-- Mostrar el número de votos -->
-  
-        <!-- Botón para votar o retirar voto -->
-        <ion-button (click)="votar(foto)">
-          {{ foto.votantes.includes(currentUser?.uid) ? 'Votado' : 'Votar' }}
-        </ion-button>
-      </ion-label>
-    </ion-item>
-  </ion-list>
-  
 </ion-content>
