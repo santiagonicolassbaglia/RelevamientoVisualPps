@@ -136,7 +136,7 @@ export class CosasFeasPage implements OnInit {
 
   async abrirGrafico() {
     const modal = await this.modalController.create({
-      component: BarChartComponent,  // Cambiar a BarChartComponent
+      component: BarChartComponent,
       componentProps: {
         labels: this.barChartLabels,
         data: this.barChartData

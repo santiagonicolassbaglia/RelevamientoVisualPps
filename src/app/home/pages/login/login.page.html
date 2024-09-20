@@ -1,46 +1,70 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Iniciar Sesión</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-center ">Iniciar Sesión</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="background-content ion-padding">
-  <!-- Formulario de inicio de sesión -->
-  <form [formGroup]="loginForm" (ngSubmit)="login()">
-    <ion-item>
-      <ion-label position="floating">Email</ion-label>
-      <ion-input type="email" formControlName="email" class="input-field"></ion-input>
-    </ion-item>
-    <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-      <small class="error">El email es requerido y debe tener un formato válido.</small>
-    </div>
+<!-- Agregamos la imagen de fondo -->
+<ion-content class="ion-padding ">
 
-    <ion-item>
-      <ion-label position="floating">Contraseña</ion-label>
-      <ion-input type="password" formControlName="password" class="input-field"></ion-input>
-    </ion-item>
-    <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-      <small class="error">La contraseña es requerida (mínimo 6 caracteres).</small>
-    </div>
 
-    <ion-button expand="full" type="submit" [disabled]="loginForm.invalid" class="submit-button">
-      Iniciar sesión
-    </ion-button>
-  </form>
-
- 
-
-  <!-- Botones de ingreso rápido -->
   <ion-grid>
-    <ion-row>
-      <ion-col size="6" *ngFor="let user of quickUsers">
-        <ion-button expand="block" fill="outline" (click)="fillForm(user)">
-          {{ user.correo }}
-        </ion-button>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12" size-md="8" size-lg="6">
+        <!-- Formulario de inicio de sesión -->
+        <form [formGroup]="loginForm" (ngSubmit)="login()" class="login-form">
+          <!-- Input de Email -->
+          <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input id="email" type="email" formControlName="email" class="form-control" placeholder="Ingresa tu correo" />
+            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
+              <small>Email es requerido y debe tener un formato válido.</small>
+            </div>
+          </div>
+
+          <!-- Input de Contraseña -->
+          <div class="form-group ">
+            <label for="password" class="form-label">Contraseña</label>
+            <input id="password" type="password" formControlName="password" class="form-control" placeholder="Ingresa tu contraseña" />
+            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
+              <small>La contraseña es requerida (mínimo 6 caracteres).</small>
+            </div>
+          </div>
+
+          <!-- Botón de Iniciar Sesión -->
+          <ion-row>
+            <ion-col size="12">
+              <ion-button expand="block" type="submit" [disabled]="loginForm.invalid" color="primary">
+                Iniciar sesión
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </form>
+
+        <!-- Botones de ingreso rápido -->
+        <ion-row class="ion-margin-top  ">
+          <ion-col size="12">
+            <ion-grid>
+              <ion-row>
+                <ion-col size="12" *ngFor="let user of quickUsers">
+                  <ion-button expand="block" (click)="fillForm(user)" color="secondary">
+                    {{ user.correo }}
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-col>
+        </ion-row>
+
+        <!-- Botón de Registrarse -->
+        <ion-row>
+          <ion-col size="12">
+            <ion-button expand="block" (click)="goToRegister()" color="tertiary">
+              Registrarse
+            </ion-button>
+          </ion-col>
+        </ion-row>
       </ion-col>
     </ion-row>
   </ion-grid>
-
-  <!-- Botón de registrarse -->
-  <ion-button expand="full" color="secondary" (click)="goToRegister()">Registrarse</ion-button>
 </ion-content>
