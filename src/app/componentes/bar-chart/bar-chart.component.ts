@@ -5,7 +5,7 @@ import { Chart, registerables } from 'chart.js';  // Importar Chart.js
 @Component({
   selector: 'app-bar-chart',
   templateUrl: './bar-chart.component.html',
-  styleUrls: ['./bar-chart.component.css'],
+ 
   standalone: true,
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -44,6 +44,6 @@ export class BarChartComponent  implements OnInit {
   }
 
   cerrarModal() {
-    this.modalController.dismiss();
+    this.modalController.dismiss() ;
   }
 }

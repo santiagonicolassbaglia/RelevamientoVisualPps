@@ -1,27 +1,56 @@
+// Estilo para aplicar un fondo de pantalla a ion-content
+.background-content {
+  --background: none;
+  background-image: url('../../assets/ladrillos4.jpg');  /* Asegúrate de que la imagen esté en la carpeta correcta */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .button-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
 
 .big-button {
-  width: 100%;
-  height: 50%;
+  position: relative;
+  height: 200px;  /* Altura del botón */
+  width: 100%;  /* Ocupa todo el ancho disponible */
+  max-width: 300px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  --background: none;  /* Quitar el color de fondo de Ionic */
+  border-radius: 10px;
+}
+
+.button-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.6);  /* Para oscurecer un poco la imagen y que el texto sea visible */
+}
+
+.button-text-overlay {
+  position: relative;
+  z-index: 1;  /* Para que el texto esté por encima de la imagen */
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.5rem;
+  height: 100%;
 }
 
-ion-img {
-  max-height: 80%;
-  max-width: 80%;
-  object-fit: contain;
-}
-
-/* El ion-fab asegura que el botón esté siempre visible */
-ion-fab {
-  z-index: 1000; /* Asegura que esté encima del contenido */
+.logout-fab {
+  margin-bottom: 20px;  /* Separación del borde inferior */
+  margin-right: 10px;   /* Separación del borde derecho */
 }

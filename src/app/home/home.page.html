@@ -4,21 +4,23 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="background-content">
   <div class="button-container">
+    <!-- Botón de Cosas Lindas -->
     <ion-button expand="block" class="big-button" (click)="goToCosasLindas()">
-      <ion-img src="assets/img/button1-image.png"></ion-img>
-      Cosas Lindas
+      <div class="button-background" [ngStyle]="{'background-image': 'url(' + randomCosaLinda + ')'}"></div>
+      <div class="button-text-overlay">Cosas Lindas</div>
     </ion-button>
 
+    <!-- Botón de Cosas Feas -->
     <ion-button expand="block" class="big-button" (click)="goToCosasFeas()">
-      <ion-img src="assets/img/button2-image.png"></ion-img>
-      Cosas Feas
+      <div class="button-background" [ngStyle]="{'background-image': 'url(' + randomCosaFea + ')'}"></div>
+      <div class="button-text-overlay">Cosas Feas</div>
     </ion-button>
   </div>
 
   <!-- Botón de Cerrar Sesión -->
-  <ion-fab vertical="top" horizontal="end" slot="fixed">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="logout-fab">
     <ion-button color="danger" (click)="logout()">
       <ion-icon name="log-out-outline"></ion-icon>
       Cerrar sesión

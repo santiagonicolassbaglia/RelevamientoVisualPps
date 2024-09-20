@@ -5,7 +5,7 @@ import { Chart, registerables } from 'chart.js';  // Importar Chart.js
 @Component({
   selector: 'app-pie-chart',
   templateUrl: './pie-chart.component.html',
-  styleUrls: ['./pie-chart.component.css'],
+ 
   standalone: true,
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -16,15 +16,15 @@ export class PieChartComponent implements OnInit {
   constructor(private modalController: ModalController) {}
 
   ngOnInit() {
-    Chart.register(...registerables);  // Registrar todos los componentes de Chart.js, incluyendo gráficos de barra y torta
+    Chart.register(...registerables);  // Registrar los componentes de Chart.js
     this.crearGrafico();
   }
 
   // Crear el gráfico de torta
-  crearGrafico() {
+   crearGrafico() {
     const ctx = (document.getElementById('pieChart') as HTMLCanvasElement).getContext('2d');
     new Chart(ctx, {
-      type: 'pie',  // Cambiar a 'pie' o 'bar' dependiendo del gráfico
+      type: 'pie',
       data: {
         labels: this.labels,
         datasets: [{

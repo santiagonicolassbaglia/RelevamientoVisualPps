@@ -5,4 +5,50 @@ body, html {
     padding: 0;
     background-color: #fff; /* Asegúrate de que no sea negro */
   }
+  ion-content {
+    --background: #f4f4f4;
+  }
+  
+  .input-field {
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    color: var(--ion-text-color, #000);
+    font-size: 16px;
+  }
+  
+  .error {
+    color: #eb445a;  /* Color rojo para los mensajes de error */
+    font-size: 12px;
+    margin-left: 16px;
+  }
+  
+  .submit-button {
+    margin-top: 16px;
+    font-size: 16px;
+  }
+  
+  ion-button {
+    margin-top: 12px;
+  }
+  
+  ion-grid {
+    margin-top: 24px;
+  }
+  
+  ion-row {
+    justify-content: center;
+  }
+  
+  ion-col {
+    margin-bottom: 12px;
+  }
+  
+  ion-divider {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    height: 2px;
+    background-color: #ddd;
+  }
   
