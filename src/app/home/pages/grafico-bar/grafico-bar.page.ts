@@ -29,24 +29,31 @@ export class GraficoBarPage implements OnInit {
   }
 
   crearGrafico() {
-    const ctx = (document.getElementById('barChart') as HTMLCanvasElement).getContext('2d');
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: this.barChartLabels,
-        datasets: [{
-          data: this.barChartData,
-          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#FF9F40', '#4BC0C0', '#9966FF'],
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true  // Asegúrate de que el eje Y comience en cero
+    const canvas = document.getElementById('barChart') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: this.barChartLabels,
+          datasets: [{
+            data: this.barChartData,
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#FF9F40', '#4BC0C0', '#9966FF'],
+          }]
+        },
+        options: {
+          responsive: true, // Asegurar que sea responsive
+          maintainAspectRatio: false, // Mantener relación de aspecto
+          scales: {
+            y: {
+              beginAtZero: true  // Asegúrate de que el eje Y comience en cero
+            }
           }
         }
-      }
-    });
+      });
+    } else {
+      console.error('No se pudo obtener el contexto del canvas.');
+    }
   }
 
   goBack() {

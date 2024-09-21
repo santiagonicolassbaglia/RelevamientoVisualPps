@@ -146,4 +146,5 @@ export class CosasFeasPage implements OnInit {
       }
     });
   }
+  
 }
