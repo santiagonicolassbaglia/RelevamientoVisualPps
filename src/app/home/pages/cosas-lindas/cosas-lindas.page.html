@@ -25,7 +25,13 @@
       </ion-button>
     </div>
 
-    <div *ngIf="fotos.length > 0; else emptyState">
+    <!-- Botón para alternar la visibilidad de las fotos del usuario actual -->
+    <ion-button expand="block" color="secondary" (click)="toggleMostrarMisFotos()">
+      {{ mostrarMisFotos ? 'Ocultar Mis Fotos' : 'Mostrar Mis Fotos' }}
+    </ion-button>
+
+    <!-- Lista general de fotos, que solo se muestra cuando no estamos viendo las fotos del usuario -->
+    <div *ngIf="fotos.length > 0 && !mostrarMisFotos; else emptyState">
       <ion-list>
         <ion-item *ngFor="let foto of fotos">
           <ion-thumbnail slot="start">
@@ -45,8 +51,32 @@
       </ion-list>
     </div>
 
+    <!-- Sección de fotos subidas por el usuario actual -->
+    <ng-container *ngIf="mostrarMisFotos">
+      <h3>Mis Fotos</h3>
+      <ion-list *ngIf="cargarFotosDelUsuario().length > 0; else noUserFotos">
+        <ion-item *ngFor="let foto of cargarFotosDelUsuario()">
+          <ion-thumbnail slot="start">
+            <img [src]="foto.imageSrc">
+          </ion-thumbnail>
+          <ion-label>
+            <h2>{{ foto.usuario }}</h2>
+            <p>{{ foto.fecha | date }}</p>
+            <p>Votos: {{ foto.votos }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+
+      <ng-template #noUserFotos>
+        <div class="empty-state">
+          <h3>No has subido ninguna foto aún.</h3>
+        </div>
+      </ng-template>
+    </ng-container>
+
+    <!-- Estado vacío general si no hay fotos (solo se muestra cuando no hay fotos y no se están viendo las fotos del usuario) -->
     <ng-template #emptyState>
-      <div class="empty-state">
+      <div class="empty-state" *ngIf="fotos.length === 0 && !mostrarMisFotos">
         <h3>No hay fotos subidas aún.</h3>
         <p>Toma una foto y súbela para comenzar.</p>
       </div>

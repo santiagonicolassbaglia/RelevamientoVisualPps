@@ -28,12 +28,31 @@ export class CosasLindasPage implements OnInit {
   currentUser: any;
   pieChartLabels: string[] = [];
   pieChartData: number[] = [];
+  mostrarMisFotos: boolean = false;  // Nueva propiedad para manejar la visibilidad
 
-  constructor(private firestore: Firestore, private storage: Storage, private authService: AuthService, private modalController: ModalController, private navCtrl: NavController) {}  // Incluir ModalController en el constructor
+  constructor(
+    private firestore: Firestore, 
+    private storage: Storage, 
+    private authService: AuthService, 
+    private modalController: ModalController, 
+    private navCtrl: NavController
+  ) {} 
 
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();  // Obtener el usuario actual
     this.cargarFotos();
+  }
+
+  // Método para mostrar solo las fotos que subió el usuario actual
+  cargarFotosDelUsuario() {
+    const usuarioEmail = this.currentUser?.email || 'Desconocido';
+    const fotosFiltradas = this.fotos.filter(foto => foto.usuario === usuarioEmail);
+    return fotosFiltradas;
+  }
+
+  // Cambiar la visibilidad de la sección con las fotos del usuario
+  toggleMostrarMisFotos() {
+    this.mostrarMisFotos = !this.mostrarMisFotos;
   }
 
   // Método para cargar fotos desde Firestore
