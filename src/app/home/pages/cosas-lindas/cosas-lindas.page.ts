@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';  // Solo necesitamos importar IonicModule
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
@@ -18,7 +18,7 @@ import { NavController } from '@ionic/angular';
   templateUrl: './cosas-lindas.page.html',
   styleUrls: ['./cosas-lindas.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],  // Usar solo IonicModule para los componentes de Ionic
+  imports: [CommonModule, FormsModule, IonicModule,NgIf],  // Usar solo IonicModule para los componentes de Ionic
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CosasLindasPage implements OnInit {
@@ -45,10 +45,15 @@ export class CosasLindasPage implements OnInit {
 
   // Método para mostrar solo las fotos que subió el usuario actual
   cargarFotosDelUsuario() {
+    // Asegúrate de que this.currentUser tenga el email del usuario autenticado
     const usuarioEmail = this.currentUser?.email || 'Desconocido';
-    const fotosFiltradas = this.fotos.filter(foto => foto.usuario === usuarioEmail);
-    return fotosFiltradas;
+  
+    // Filtrar las fotos que pertenezcan al usuario actual
+    const fotosDelUsuario = this.fotos.filter(foto => foto.usuario === usuarioEmail);
+  
+    return fotosDelUsuario;
   }
+  
 
   // Cambiar la visibilidad de la sección con las fotos del usuario
   toggleMostrarMisFotos() {
@@ -160,9 +165,23 @@ export class CosasLindasPage implements OnInit {
   }
 
   prepararDatosGrafico() {
-    this.pieChartLabels = this.fotos.map(foto => `Foto de ${foto.usuario}`);
-    this.pieChartData = this.fotos.map(foto => foto.votos);
+    const fotosPorUsuario = new Map<string, number>();
+  
+    // Contar cuántas fotos ha subido cada usuario
+    this.fotos.forEach(foto => {
+      const usuario = foto.usuario;
+      if (fotosPorUsuario.has(usuario)) {
+        fotosPorUsuario.set(usuario, fotosPorUsuario.get(usuario)! + 1);
+      } else {
+        fotosPorUsuario.set(usuario, 1);
+      }
+    });
+  
+    // Preparar las etiquetas y los datos para el gráfico
+    this.pieChartLabels = Array.from(fotosPorUsuario.keys()).map(usuario => `Fotos de ${usuario}`);
+    this.pieChartData = Array.from(fotosPorUsuario.values());
   }
+  
 
   abrirGrafico() {
     this.prepararDatosGrafico();

@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/Service/auth.service';
 import { Observable } from 'rxjs';
 import { addDoc, doc, updateDoc } from 'firebase/firestore';
 import { ModalController } from '@ionic/angular';
-import { BarChartComponent } from '../../../componentes/bar-chart/bar-chart.component';  // Componente para gráfico de barras
+import { BarChartComponent } from '../../../componentes/bar-chart/bar-chart.component'; 
 import { NavController } from '@ionic/angular';
 
 @Component({
@@ -17,7 +17,7 @@ import { NavController } from '@ionic/angular';
   templateUrl: './cosas-feas.page.html',
   styleUrls: ['./cosas-feas.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule,NgIf],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CosasFeasPage implements OnInit {
@@ -27,17 +27,25 @@ export class CosasFeasPage implements OnInit {
   currentUser: any;
   barChartLabels: string[] = [];
   barChartData: number[] = [];
+  mostrarMisFotos: boolean = false;  // Propiedad para controlar la visibilidad de "Mis Fotos"
 
-  constructor(private firestore: Firestore, private storage: Storage, private authService: AuthService, private modalController: ModalController,private navCtrl: NavController) {}
+  constructor(
+    private firestore: Firestore,
+    private storage: Storage,
+    private authService: AuthService,
+    private modalController: ModalController,
+    private navCtrl: NavController
+  ) {}
 
   ngOnInit() {
-    this.currentUser = this.authService.getCurrentUser();
-    this.cargarFotos();
+    this.currentUser = this.authService.getCurrentUser();  // Obtener el usuario actual
+    this.cargarFotos();  // Cargar las fotos al inicializar
   }
 
+  // Método para cargar fotos desde Firestore (fotos-feas)
   cargarFotos() {
-    const fotosCollection = collection(this.firestore, 'fotos-feas');  // Cambiar a 'fotos-feas'
-    const fotosQuery = query(fotosCollection, orderBy('fecha', 'desc'));
+    const fotosCollection = collection(this.firestore, 'fotos-feas');  // Cambiado a fotos-feas
+    const fotosQuery = query(fotosCollection, orderBy('fecha', 'desc'));  // Ordenar por fecha
     collectionData(fotosQuery, { idField: 'id' }).subscribe((fotos: any[]) => {
       this.fotos = fotos.map(foto => ({
         id: foto.id,
@@ -52,6 +60,7 @@ export class CosasFeasPage implements OnInit {
     });
   }
 
+  // Método para tomar o seleccionar una foto
   async tomarFoto() {
     const image = await Camera.getPhoto({
       resultType: CameraResultType.Base64,
@@ -66,6 +75,7 @@ export class CosasFeasPage implements OnInit {
     this.imageSrc = `data:image/jpeg;base64,${this.imageBase64}`;
   }
 
+  // Método para subir la foto a Firebase Storage
   async subirFoto() {
     if (!this.imageBase64) {
       console.error('No hay imagen para subir');
@@ -73,25 +83,26 @@ export class CosasFeasPage implements OnInit {
     }
 
     const currentUser = this.authService.getCurrentUser();
-    const filePath = `fotos-feas/${Date.now()}_${currentUser?.uid}.jpg`;
+    const filePath = `fotos-feas/${Date.now()}_${currentUser?.uid}.jpg`;  // Cambiado a fotos-feas
     const storageRef = ref(this.storage, filePath);
 
     await uploadString(storageRef, this.imageBase64, 'base64');
     const downloadURL = await getDownloadURL(storageRef);
 
-    const fotosCollection = collection(this.firestore, 'fotos-feas');  // Cambiar a 'fotos-feas'
+    const fotosCollection = collection(this.firestore, 'fotos-feas');  // Cambiado a fotos-feas
     await addDoc(fotosCollection, {
       url: downloadURL,
       fecha: new Date(),
       usuario: currentUser?.email || 'Desconocido',
       votos: 0,
-      votantes: []
+      votantes: []  // Inicializamos la lista de votantes vacía
     });
 
     this.imageSrc = null;
     this.imageBase64 = null;
   }
 
+  // Método para votar o quitar el voto
   async votar(foto: any) {
     const currentUserUid = this.currentUser?.uid;
 
@@ -100,7 +111,7 @@ export class CosasFeasPage implements OnInit {
       return;
     }
 
-    const fotoDocRef = doc(this.firestore, `fotos-feas/${foto.id}`);  // Cambiar a 'fotos-feas'
+    const fotoDocRef = doc(this.firestore, `fotos-feas/${foto.id}`);  // Cambiado a fotos-feas
 
     const yaVotado = foto.votantes.includes(currentUserUid);
 
@@ -130,15 +141,44 @@ export class CosasFeasPage implements OnInit {
     }
   }
 
-  prepararDatosGrafico() {
-    this.barChartLabels = this.fotos.map(foto => `Foto de ${foto.usuario}`);
-    this.barChartData = this.fotos.map(foto => foto.votos);
+  // Método para mostrar solo las fotos que subió el usuario actual
+  cargarFotosDelUsuario() {
+    // Asegúrate de que this.currentUser tenga el email del usuario autenticado
+    const usuarioEmail = this.currentUser?.email || 'Desconocido';
+  
+    // Filtrar las fotos que pertenezcan al usuario actual
+    const fotosDelUsuario = this.fotos.filter(foto => foto.usuario === usuarioEmail);
+  
+    return fotosDelUsuario;
+  }
+  
+
+  // Cambiar la visibilidad de "Mis Fotos"
+  toggleMostrarMisFotos() {
+    this.mostrarMisFotos = !this.mostrarMisFotos;
   }
 
+  // Método para preparar los datos del gráfico de barras
+  prepararDatosGrafico() {
+    const fotosPorUsuario: { [usuario: string]: number } = {};
+
+    this.fotos.forEach(foto => {
+      const usuario = foto.usuario || 'Desconocido';
+      if (fotosPorUsuario[usuario]) {
+        fotosPorUsuario[usuario]++;
+      } else {
+        fotosPorUsuario[usuario] = 1;
+      }
+    });
+
+    this.barChartLabels = Object.keys(fotosPorUsuario);
+    this.barChartData = Object.values(fotosPorUsuario);
+  }
+
+  // Método para abrir el gráfico de barras
   abrirGrafico() {
     this.prepararDatosGrafico();
 
-    // Navegar a la página del gráfico pasando los datos
     this.navCtrl.navigateForward('/grafico-bar', {
       queryParams: {
         labels: JSON.stringify(this.barChartLabels),
@@ -146,5 +186,4 @@ export class CosasFeasPage implements OnInit {
       }
     });
   }
-  
 }

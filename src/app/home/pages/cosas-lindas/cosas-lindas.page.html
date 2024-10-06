@@ -8,78 +8,69 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div class="gallery-container">
+  <div class="photo-section">
     <!-- Botón para tomar o seleccionar una foto -->
     <ion-button expand="block" (click)="tomarFoto()">
       <ion-icon name="camera-outline"></ion-icon>
       Tomar Foto
     </ion-button>
 
-    <!-- Mostrar la imagen seleccionada o tomada -->
-    <div *ngIf="imageSrc">
+    <!-- Mostrar la imagen seleccionada o tomada en un contenedor -->
+    <div *ngIf="imageSrc" class="photo-preview">
       <ion-img [src]="imageSrc"></ion-img>
-
-      <!-- Botón para subir la foto a Firebase -->
       <ion-button expand="block" color="primary" (click)="subirFoto()">
         Subir Foto
       </ion-button>
     </div>
-
-    <!-- Botón para alternar la visibilidad de las fotos del usuario actual -->
-    <ion-button expand="block" color="secondary" (click)="toggleMostrarMisFotos()">
-      {{ mostrarMisFotos ? 'Ocultar Mis Fotos' : 'Mostrar Mis Fotos' }}
-    </ion-button>
-
-    <!-- Lista general de fotos, que solo se muestra cuando no estamos viendo las fotos del usuario -->
-    <div *ngIf="fotos.length > 0 && !mostrarMisFotos; else emptyState">
-      <ion-list>
-        <ion-item *ngFor="let foto of fotos">
-          <ion-thumbnail slot="start">
-            <img [src]="foto.imageSrc">
-          </ion-thumbnail>
-          <ion-label>
-            <h2>{{ foto.usuario }}</h2>
-            <p>{{ foto.fecha | date }}</p>
-            <p>Votos: {{ foto.votos }}</p>
-
-            <!-- Botón para votar o retirar voto -->
-            <ion-button (click)="votar(foto)">
-              {{ foto.votantes.includes(currentUser?.uid) ? 'Votado' : 'Votar' }}
-            </ion-button>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-    </div>
-
-    <!-- Sección de fotos subidas por el usuario actual -->
-    <ng-container *ngIf="mostrarMisFotos">
-      <h3>Mis Fotos</h3>
-      <ion-list *ngIf="cargarFotosDelUsuario().length > 0; else noUserFotos">
-        <ion-item *ngFor="let foto of cargarFotosDelUsuario()">
-          <ion-thumbnail slot="start">
-            <img [src]="foto.imageSrc">
-          </ion-thumbnail>
-          <ion-label>
-            <h2>{{ foto.usuario }}</h2>
-            <p>{{ foto.fecha | date }}</p>
-            <p>Votos: {{ foto.votos }}</p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-
-      <ng-template #noUserFotos>
-        <div class="empty-state">
-          <h3>No has subido ninguna foto aún.</h3>
-        </div>
-      </ng-template>
-    </ng-container>
-
-    <!-- Estado vacío general si no hay fotos (solo se muestra cuando no hay fotos y no se están viendo las fotos del usuario) -->
-    <ng-template #emptyState>
-      <div class="empty-state" *ngIf="fotos.length === 0 && !mostrarMisFotos">
-        <h3>No hay fotos subidas aún.</h3>
-        <p>Toma una foto y súbela para comenzar.</p>
-      </div>
-    </ng-template>
   </div>
-</ion-content>
+
+  <!-- Botón para alternar la visibilidad de las fotos del usuario actual -->
+  <ion-button expand="block" color="secondary" (click)="toggleMostrarMisFotos()">
+    {{ mostrarMisFotos ? 'Ocultar Mis Fotos' : 'Mostrar Mis Fotos' }}
+  </ion-button>
+
+  <!-- Galería de fotos generales en un formato de cuadrícula -->
+  <div *ngIf="fotos.length > 0 && !mostrarMisFotos; else emptyState">
+    <div class="gallery-grid">
+      <div class="gallery-item" *ngFor="let foto of fotos">
+        <img [src]="foto.imageSrc" alt="Foto subida" />
+        <p><strong>{{ foto.usuario }}</strong></p>
+        <p>{{ foto.fecha | date }}</p>
+        <p>Votos: {{ foto.votos }}</p>
+        <ion-button size="small" (click)="votar(foto)">
+          {{ foto.votantes.includes(currentUser?.uid) ? 'Votado' : 'Votar' }}
+        </ion-button>
+      </div>
+    </div>
+  </div>
+<!-- Sección de fotos subidas por el usuario actual -->
+<ng-container *ngIf="mostrarMisFotos">
+  <h3>Mis Fotos</h3>
+  <!-- Asegurarse de que la lista de fotos del usuario se muestra correctamente -->
+  <ion-list *ngIf="cargarFotosDelUsuario().length > 0; else noUserFotos">
+    <ion-item *ngFor="let foto of cargarFotosDelUsuario()">
+      <ion-thumbnail slot="start">
+        <img [src]="foto.imageSrc">
+      </ion-thumbnail>
+      <ion-label>
+        <h2>{{ foto.usuario }}</h2>
+        <p>{{ foto.fecha | date }}</p>
+        <p>Votos: {{ foto.votos }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- Mostrar un mensaje si el usuario no tiene fotos -->
+  <ng-template #noUserFotos>
+    <div class="empty-state">
+      <h3>No has subido ninguna foto aún.</h3>
+    </div>
+  </ng-template>
+</ng-container>
+
+<!-- Template for empty state -->
+<ng-template #emptyState>
+  <div class="empty-state">
+ 
+  </div>
+</ng-template>
