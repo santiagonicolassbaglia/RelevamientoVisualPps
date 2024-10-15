@@ -15,10 +15,10 @@
         <form [formGroup]="loginForm" (ngSubmit)="login()" class="login-form">
           <!-- Input de Email -->
           <div class="form-group">
-            <label for="email" class="form-label">Email</label>
+            <label for="email" class="form-label">Correo</label>
             <input id="email" type="email" formControlName="email" class="form-control" placeholder="Ingresa tu correo" />
             <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
-              <small>Email es requerido y debe tener un formato válido.</small>
+              <small>Correo es requerido y debe tener un formato válido.</small>
             </div>
           </div>
 

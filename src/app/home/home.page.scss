@@ -1,31 +1,39 @@
-// Estilo para aplicar un fondo de pantalla a ion-content
+/* Fondo de pantalla */
 .background-content {
   --background: none;
-  background-image: url('../../assets/ladrillos4.jpg');  /* Asegúrate de que la imagen esté en la carpeta correcta */
+  background-image: url('../../assets/ladrillos4.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+  height: 100%;
 }
 
+/* El contenedor de los botones ocupará toda la pantalla */
 .button-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
+  justify-content: space-between;
+  align-items: stretch;
+  height: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 .big-button {
   position: relative;
-  height: 200px;  /* Altura del botón */
-  width: 100%;  /* Ocupa todo el ancho disponible */
-  max-width: 300px;
+  flex-grow: 1; /* Cada botón ocupa espacio igual */
+  margin: 0;
+  --background: none;
   overflow: hidden;
-  margin-bottom: 20px;
-  --background: none;  /* Quitar el color de fondo de Ionic */
-  border-radius: 10px;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* Fondo de los botones */
 .button-background {
   position: absolute;
   top: 0;
@@ -34,23 +42,34 @@
   bottom: 0;
   background-size: cover;
   background-position: center;
-  filter: brightness(0.6);  /* Para oscurecer un poco la imagen y que el texto sea visible */
+  filter: brightness(0.6);
 }
 
+/* Texto sobre los botones */
 .button-text-overlay {
   position: relative;
-  z-index: 1;  /* Para que el texto esté por encima de la imagen */
+  z-index: 1;
   color: white;
   font-size: 24px;
   font-weight: bold;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
 }
 
+/* Estilo para el botón de cerrar sesión pequeño */
 .logout-fab {
-  margin-bottom: 20px;  /* Separación del borde inferior */
-  margin-right: 10px;   /* Separación del borde derecho */
+  margin-bottom: 20px;  /* Un poco de margen inferior */
+  margin-right: 10px;   /* Un poco de margen derecho */
+  position: fixed;
+
+  /* Posicionamos el botón en la esquina inferior derecha */
+  bottom: 0;
+  right: 0;
+
+  /* Añadimos un poco de sombra */
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+
+  /* Añadimos un poco de margen a los bordes */
+  border-radius: 50%;
+  // poner un icono de cerrar sesion 
+ 
 }

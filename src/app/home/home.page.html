@@ -1,10 +1,12 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Home</ion-title>
+    <ion-title>Lo mejor para nuestro edificio</ion-title>
+    
   </ion-toolbar>
+  
 </ion-header>
 
-<ion-content class="background-content">
+<ion-content class="background-content" fullscreen="true">
   <div class="button-container">
     <!-- Botón de Cosas Lindas -->
     <ion-button expand="block" class="big-button" (click)="goToCosasLindas()">
@@ -19,11 +21,11 @@
     </ion-button>
   </div>
 
-  <!-- Botón de Cerrar Sesión -->
+  <!-- Botón de Cerrar Sesión pequeño en la parte inferior -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="logout-fab">
-    <ion-button color="danger" (click)="logout()">
+    <ion-button color="danger" size="small" (click)="logout()">
       <ion-icon name="log-out-outline"></ion-icon>
-      Cerrar sesión
+      Salir..
     </ion-button>
   </ion-fab>
 </ion-content>
