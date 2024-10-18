@@ -46,13 +46,17 @@ randomCosaLinda: string = '';
     );
   }
 
-logout() {
-  this.authService.logout().then(() => {
-    this.router.navigate(['/login']);  // Redirigir al login después de cerrar sesión
-  }).catch(error => {
-    console.error('Error al cerrar sesión', error);
-  });
-}
+  logout() {
+    this.authService.logout().then(() => {
+      this.router.navigate(['/login']).then(() => {
+        // Asegurarse de que el formulario de login esté limpio
+        localStorage.clear(); // Por si las credenciales están almacenadas localmente
+        sessionStorage.clear(); // Limpiar cualquier credencial en la sesión
+      });
+    }).catch(error => {
+      console.error('Error al cerrar sesión', error);
+    });
+  }
 
 goToCosasLindas() {
   this.router.navigate(['/cosas-lindas']);  // Redirigir a la página de cosas lindas
