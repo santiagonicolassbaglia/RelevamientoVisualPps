@@ -9,4 +9,21 @@
     width: 100% !important;
     height: auto !important;
   }
+  .chart-container {
+    margin: 0 auto;
+    max-width: 600px;
+  }
+  
+  .photo-preview {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .photo-preview ion-img {
+    max-width: 300px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto;  /* Centrar la imagen */
+  }
   

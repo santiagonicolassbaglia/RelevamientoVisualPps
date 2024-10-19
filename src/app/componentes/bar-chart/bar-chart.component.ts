@@ -1,3 +1,4 @@
+import { NgIf } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Chart, registerables } from 'chart.js';  // Importar Chart.js
@@ -7,23 +8,25 @@ import { Chart, registerables } from 'chart.js';  // Importar Chart.js
   selector: 'app-bar-chart',
   templateUrl: './bar-chart.component.html',
   standalone: true,
+  imports: [NgIf],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class BarChartComponent implements OnInit {
   @Input() labels: string[] = [];
   @Input() data: number[] = [];
+  @Input() imageSrc: string = '';  // Para almacenar la URL de la imagen
 
   constructor(private modalController: ModalController) {}
 
   ngOnInit() {
-    Chart.register(...registerables); // Registrar los componentes de Chart.js
+    Chart.register(...registerables);  // Registrar los componentes de Chart.js
     this.crearGrafico();
   }
 
   // Crear el gráfico de barras
   crearGrafico() {
     const ctx = (document.getElementById('barChart') as HTMLCanvasElement).getContext('2d');
-    if (ctx) { // Verificación de que el contexto esté disponible
+    if (ctx) {  // Verificación de que el contexto esté disponible
       new Chart(ctx, {
         type: 'bar',
         data: {
@@ -34,11 +37,11 @@ export class BarChartComponent implements OnInit {
           }]
         },
         options: {
-          responsive: true, // Asegurar que sea responsive
+          responsive: true,  // Asegurar que sea responsive
           maintainAspectRatio: false,
           scales: {
             y: {
-              beginAtZero: true, // Asegurar que el eje Y comience en cero
+              beginAtZero: true,  // Asegurar que el eje Y comience en cero
             }
           }
         }

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Resultados de Cosas Feas</ion-title>
+    <ion-title>Gráfico de Votos</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="cerrarModal()">Cerrar</ion-button>
     </ion-buttons>
@@ -10,5 +10,10 @@
 <ion-content>
   <div class="chart-container">
     <canvas id="barChart"></canvas>
+  </div>
+
+  <!-- Mostrar la imagen relacionada debajo del gráfico -->
+  <div class="photo-preview" *ngIf="imageSrc">
+    <ion-img [src]="imageSrc"></ion-img>
   </div>
 </ion-content>

@@ -7,7 +7,7 @@ import { Firestore, collection, collectionData, query, orderBy } from '@angular/
 import { Storage, ref, uploadString, getDownloadURL } from '@angular/fire/storage';
 import { AuthService } from 'src/app/Service/auth.service';
 import { Observable } from 'rxjs';
-import { addDoc, doc, updateDoc } from 'firebase/firestore';
+import { addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { ModalController } from '@ionic/angular';
 import { PieChartComponent } from '../../../componentes/pie-chart/pie-chart.component';  // Asegúrate de tener este componente
 import { NavController } from '@ionic/angular'; 
@@ -194,4 +194,46 @@ export class CosasLindasPage implements OnInit {
       }
     });
   }
+
+   
+
+  abrirGraficoVotos(foto: any) {
+    // Array para almacenar los nombres o correos de los votantes
+    const labels: string[] = [];
+  
+    // Iteramos sobre los UIDs de los votantes y obtenemos sus correos electrónicos o nombres
+    Promise.all(foto.votantes.map((votanteUid: string) => {
+      return this.obtenerNombreVotante(votanteUid);
+    })).then((nombresVotantes) => {
+      // Asignamos los nombres obtenidos a las etiquetas
+      const votosData = Array(foto.votantes.length).fill(1);
+      const labels = nombresVotantes.map(nombre => `Voto de: ${nombre}`);
+      
+      // Navegamos a la página del gráfico de barras
+      this.navCtrl.navigateForward('/grafico-torta', {
+        queryParams: {
+          labels: JSON.stringify(labels),
+          data: JSON.stringify(votosData),
+          imageSrc: foto.imageSrc,
+        },
+      });
+    }).catch(error => {
+      console.error('Error al obtener los nombres de los votantes', error);
+    });
+  }
+  
+  // Método para obtener el nombre o correo electrónico del votante por UID
+  async obtenerNombreVotante(votanteUid: string): Promise<string> {
+    const usuarioDoc = await doc(this.firestore, `usuarios/${votanteUid}`);
+    const usuarioSnapshot = await getDoc(usuarioDoc);
+  
+    if (usuarioSnapshot.exists()) {
+      const data = usuarioSnapshot.data();
+      return data["email"] || 'Usuario desconocido';  // Puedes ajustar esto según tu estructura de usuarios
+    } else {
+      return 'Usuario desconocido';
+    }
+  }
 }
+  
+ 

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Gráfico de Votaciones</ion-title>
+    <ion-title>Gráfico</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="goBack()">Volver</ion-button>
     </ion-buttons>
@@ -8,5 +8,11 @@
 </ion-header>
 
 <ion-content>
+  <!-- Canvas para el gráfico de torta -->
   <canvas id="pieChart"></canvas>
+
+  <!-- Mostrar la imagen relacionada debajo del gráfico -->
+  <div class="photo-preview" *ngIf="imageSrc">
+    <ion-img [src]="imageSrc"></ion-img>
+  </div>
 </ion-content>

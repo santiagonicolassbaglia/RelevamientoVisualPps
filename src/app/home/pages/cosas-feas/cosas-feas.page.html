@@ -30,18 +30,26 @@
 
 <!-- Galería de fotos generales en un formato de cuadrícula -->
 <div *ngIf="fotos.length > 0 && !mostrarMisFotos; else emptyState">
-<div class="gallery-grid">
-  <div class="gallery-item" *ngFor="let foto of fotos">
-    <img [src]="foto.imageSrc" alt="Foto subida" />
-    <p><strong>{{ foto.usuario }}</strong></p>
-    <p>{{ foto.fecha | date }}</p>
-    <p>Votos: {{ foto.votos }}</p>
-    <ion-button size="small" (click)="votar(foto)">
-      {{ foto.votantes.includes(currentUser?.uid) ? 'Votado' : 'Votar' }}
-    </ion-button>
+  <div class="gallery-grid">
+    <div class="gallery-item" *ngFor="let foto of fotos">
+      <img [src]="foto.imageSrc" alt="Foto subida" />
+      <p><strong>{{ foto.usuario }}</strong></p>
+      <p>{{ foto.fecha | date }}</p>
+      <p>Votos: {{ foto.votos }}</p>
+      
+      <!-- Botón de Votar -->
+      <ion-button size="small" (click)="votar(foto)">
+        {{ foto.votantes.includes(currentUser?.uid) ? 'Votado' : 'Votar' }}
+      </ion-button>
+
+      <!-- Botón de Ver Gráfico -->
+      <ion-button size="small" (click)="abrirGraficoVotos(foto)">
+        Ver Gráfico de Votos
+      </ion-button>
+    </div>
   </div>
 </div>
-</div>
+
 
 <!-- Sección de fotos subidas por el usuario actual -->
 <ng-container *ngIf="mostrarMisFotos">

@@ -1,14 +1,17 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>Resultados de la Votación</ion-title>
+    <ion-title>Gráfico de Barras</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="goBack()">Cerrar</ion-button>
+      <ion-button (click)="goBack()">Volver</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <div class="chart-container">
-    <canvas id="barChart"></canvas> <!-- Aquí es donde se renderiza el gráfico -->
+<ion-content>
+  <canvas id="barChart"></canvas>
+
+  <!-- Mostrar la imagen relacionada debajo del gráfico -->
+  <div *ngIf="imageSrc" class="photo-preview">
+    <ion-img [src]="imageSrc"></ion-img>
   </div>
 </ion-content>
