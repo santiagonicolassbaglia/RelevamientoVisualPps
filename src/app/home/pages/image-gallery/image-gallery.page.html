@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Galería</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="goBack()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="photo-container">
+    <img [src]="currentImage" alt="Foto seleccionada" />
+  </div>
+</ion-content>

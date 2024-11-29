@@ -35,6 +35,10 @@ export const routes: Routes = [
     path: 'grafico-torta',
     loadComponent: () => import('./grafico-torta/grafico-torta.page').then( m => m.GraficoTortaPage)
   },
+  {
+    path: 'image-gallery',
+    loadComponent: () => import('./home/pages/image-gallery/image-gallery.page').then( m => m.ImageGalleryPage)
+  },
   
 
 

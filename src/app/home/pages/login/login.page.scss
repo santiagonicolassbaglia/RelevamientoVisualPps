@@ -1,7 +1,15 @@
- 
 /* Imagen de fondo para el ion-content */
+
+ion-content {
+  --background: none;
+  background-image: url('../../../../assets/ladrillos3.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100%;
+}
 .custom-background {
-  background-image: url('../../../../assets/ladrillos2.jpg'); 
+  background-image: url('../../../../assets/ladrillos3.jpg'); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -9,29 +17,22 @@
 }
 
 /* Caja de formulario */
-.login-form {
+.login-card {
   background-color: rgba(255, 255, 255, 0.9); /* Transparencia en el fondo del formulario */
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-label {
-  font-weight: bold;
-  color: #333;
-}
-
-.form-control {
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  margin-top: 5px;
+  max-width: 400px;
+  margin: 40px auto;
+}
+
+.login-form {
+  padding: 0;
+}
+
+ion-item {
+  margin-bottom: 15px;
 }
 
 .error-message {
@@ -42,4 +43,3 @@
 ion-button {
   margin-top: 10px;
 }
-

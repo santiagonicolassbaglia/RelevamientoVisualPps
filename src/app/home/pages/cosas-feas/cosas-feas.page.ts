@@ -143,15 +143,10 @@ export class CosasFeasPage implements OnInit {
 
   // Método para mostrar solo las fotos que subió el usuario actual
   cargarFotosDelUsuario() {
-    // Asegúrate de que this.currentUser tenga el email del usuario autenticado
     const usuarioEmail = this.currentUser?.email || 'Desconocido';
-  
-    // Filtrar las fotos que pertenezcan al usuario actual
     const fotosDelUsuario = this.fotos.filter(foto => foto.usuario === usuarioEmail);
-  
     return fotosDelUsuario;
   }
-  
 
   // Cambiar la visibilidad de "Mis Fotos"
   toggleMostrarMisFotos() {
@@ -178,7 +173,6 @@ export class CosasFeasPage implements OnInit {
   // Método para abrir el gráfico de barras
   abrirGrafico() {
     this.prepararDatosGrafico();
-
     this.navCtrl.navigateForward('/grafico-bar', {
       queryParams: {
         labels: JSON.stringify(this.barChartLabels),
@@ -188,18 +182,12 @@ export class CosasFeasPage implements OnInit {
   }
 
   abrirGraficoVotos(foto: any) {
-    // Array para almacenar los nombres o correos de los votantes
     const labels: string[] = [];
-  
-    // Iteramos sobre los UIDs de los votantes y obtenemos sus correos electrónicos o nombres
     Promise.all(foto.votantes.map((votanteUid: string) => {
       return this.obtenerNombreVotante(votanteUid);
     })).then((nombresVotantes) => {
-      // Asignamos los nombres obtenidos a las etiquetas
       const votosData = Array(foto.votantes.length).fill(1);
       const labels = nombresVotantes.map(nombre => `Voto de: ${nombre}`);
-      
-      // Navegamos a la página del gráfico de barras
       this.navCtrl.navigateForward('/grafico-bar', {
         queryParams: {
           labels: JSON.stringify(labels),
@@ -211,7 +199,7 @@ export class CosasFeasPage implements OnInit {
       console.error('Error al obtener los nombres de los votantes', error);
     });
   }
-  
+
   // Método para obtener el nombre o correo electrónico del votante por UID
   async obtenerNombreVotante(votanteUid: string): Promise<string> {
     const usuarioDoc = await doc(this.firestore, `usuarios/${votanteUid}`);
@@ -224,6 +212,20 @@ export class CosasFeasPage implements OnInit {
       return 'Usuario desconocido';
     }
   }
-}
 
-// Remove the incorrect getDoc function implementation
+  // Método para abrir la imagen en pantalla grande
+  abrirImagenEnPantallaGrande(fotoSeleccionada: any) {
+    const selectedIndex = this.fotos.findIndex(foto => foto.id === fotoSeleccionada.id);
+    
+    console.log("Imagen seleccionada:", fotoSeleccionada);  // Para verificar qué imagen se selecciona
+    console.log("Índice seleccionado:", selectedIndex);
+  
+    this.navCtrl.navigateForward('/image-gallery', {
+      queryParams: {
+        images: JSON.stringify(this.fotos.map(f => f.imageSrc)),
+        index: selectedIndex
+      }
+    });
+  }
+  
+}

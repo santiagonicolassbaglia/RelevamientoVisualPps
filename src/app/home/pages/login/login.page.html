@@ -4,66 +4,55 @@
   </ion-toolbar>
 </ion-header>
 
-<!-- Agregamos la imagen de fondo -->
-<ion-content class="ion-padding ">
+<ion-content class="ion-padding custom-background">
 
 
   <ion-grid>
     <ion-row class="ion-justify-content-center">
       <ion-col size="12" size-md="8" size-lg="6">
         <!-- Formulario de inicio de sesión -->
-        <form [formGroup]="loginForm" (ngSubmit)="login()" class="login-form">
-          <!-- Input de Email -->
-          <div class="form-group">
-            <label for="email" class="form-label">Correo</label>
-            <input id="email" type="email" formControlName="email" class="form-control" placeholder="Ingresa tu correo" />
-            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
-              <small>Correo es requerido y debe tener un formato válido.</small>
+        <div class="login-card">
+          <form [formGroup]="loginForm" (ngSubmit)="login()" class="login-form">
+            <!-- Input de Email -->
+            <div class="form-group">
+              <label for="email" class="form-label">Correo</label>
+              <input id="email" type="email" formControlName="email" class="form-control" placeholder="Ingresa tu correo" />
+              <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
+                <small>Correo es requerido y debe tener un formato válido.</small>
+              </div>
             </div>
-          </div>
-
-          <!-- Input de Contraseña -->
-          <div class="form-group ">
-            <label for="password" class="form-label">Contraseña</label>
-            <input id="password" type="password" formControlName="password" class="form-control" placeholder="Ingresa tu contraseña" />
-            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
-              <small>La contraseña es requerida (mínimo 6 caracteres).</small>
+  
+            <!-- Input de Contraseña -->
+            <div class="form-group ">
+              <label for="password" class="form-label">Contraseña</label>
+              <input id="password" type="password" formControlName="password" class="form-control" placeholder="Ingresa tu contraseña" />
+              <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
+                <small>La contraseña es requerida (mínimo 6 caracteres).</small>
+              </div>
             </div>
-          </div>
 
-          <!-- Botón de Iniciar Sesión -->
-          <ion-row>
-            <ion-col size="12">
-              <ion-button expand="block" type="submit" [disabled]="loginForm.invalid" color="primary">
-                Iniciar sesión
-              </ion-button>
-            </ion-col>
-          </ion-row>
-        </form>
-
-        <!-- Botones de ingreso rápido -->
-        <ion-row class="ion-margin-top  ">
-          <ion-col size="12">
-            <ion-grid>
-              <ion-row>
-                <ion-col size="12" *ngFor="let user of quickUsers">
-                  <ion-button expand="block" (click)="fillForm(user)" color="secondary">
-                    {{ user.correo }}
-                  </ion-button>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-col>
-        </ion-row>
-
-        <!-- Botón de Registrarse -->
-        <ion-row>
-          <ion-col size="12">
-            <ion-button expand="block" (click)="goToRegister()" color="tertiary">
-              Registrarse
+            <!-- Botón de Iniciar Sesión -->
+            <ion-button expand="block" type="submit" [disabled]="loginForm.invalid" color="primary">
+              Iniciar sesión
             </ion-button>
-          </ion-col>
-        </ion-row>
+          </form>
+
+          <!-- Botones de ingreso rápido -->
+          <ion-grid>
+            <ion-row>
+              <ion-col size="12" *ngFor="let user of quickUsers">
+                <ion-button expand="block" (click)="fillForm(user)" color="secondary">
+                  {{ user.correo }}
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <!-- Botón de Registrarse -->
+          <ion-button expand="block" (click)="goToRegister()" color="tertiary">
+            Registrarse
+          </ion-button>
+        </div>
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -234,6 +234,17 @@ export class CosasLindasPage implements OnInit {
       return 'Usuario desconocido';
     }
   }
+  abrirImagenEnPantallaGrande(fotoSeleccionada: any) {
+    const selectedIndex = this.fotos.findIndex(foto => foto.id === fotoSeleccionada.id);
+  
+    this.navCtrl.navigateForward('/image-gallery', {
+      queryParams: {
+        images: JSON.stringify(this.fotos.map(f => f.imageSrc)),  // Pasar todas las imágenes
+        index: selectedIndex  // Índice de la imagen seleccionada
+      }
+    });
+  }
+  
 }
   
  
